@@ -1,5 +1,7 @@
 package com.freshbooks.FreshBooks.Request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +13,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class InvoiceLineDTO {
 
-//    @NotBlank
+    @NotBlank
     private String name;
 
-//    @NotNull
+    @NotNull
     private BigDecimal unitCost;
 
-//    @NotNull
+    @NotNull
     private Integer quantity;
 }

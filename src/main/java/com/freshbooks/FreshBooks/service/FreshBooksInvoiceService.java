@@ -9,10 +9,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +20,7 @@ public class FreshBooksInvoiceService {
     private final ObjectMapper objectMapper;
 
     public String createInvoice(CreateInvoiceRequest request) throws Exception {
-        String accessToken = getAccessToken(); // Implement token flow
+        String accessToken = getAccessToken();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
@@ -41,17 +38,16 @@ public class FreshBooksInvoiceService {
             lineItem.put("quantity", line.getQuantity());
             lines.add(lineItem);
         }
-
         invoicePayload.put("lines", lines);
 
         Map<String, Object> body = Map.of("invoice", invoicePayload);
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-            config.getBaseUrl() + "/accounting/account/" + config.getAccountId() + "/invoices/invoices",
-            HttpMethod.POST,
-            entity,
-            String.class
+                config.getBaseUrl() + "/accounting/account/" + config.getAccountId() + "/invoices/invoices",
+                HttpMethod.POST,
+                entity,
+                String.class
         );
 
         return response.getBody();

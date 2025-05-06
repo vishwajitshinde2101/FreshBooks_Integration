@@ -1,5 +1,6 @@
 package com.freshbooks.FreshBooks.Request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,10 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateInvoiceRequest {
 
-//    @NotBlank
+    @NotBlank
     private String customerId;
 
-//    @NotBlank
+    @NotBlank
     private String createDate;
 
     private List<InvoiceLineDTO> lines;

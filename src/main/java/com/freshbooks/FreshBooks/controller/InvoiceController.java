@@ -2,6 +2,7 @@ package com.freshbooks.FreshBooks.controller;
 
 import com.freshbooks.FreshBooks.Request.CreateInvoiceRequest;
 import com.freshbooks.FreshBooks.service.FreshBooksInvoiceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

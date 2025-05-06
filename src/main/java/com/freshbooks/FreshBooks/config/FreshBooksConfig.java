@@ -1,17 +1,13 @@
 package com.freshbooks.FreshBooks.config;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
-
-
-@Getter
-@Component
+@Configuration
 public class FreshBooksConfig {
 
     @Value("${freshbooks.client-id}")
@@ -26,11 +22,18 @@ public class FreshBooksConfig {
     @Value("${freshbooks.base-url}")
     private String baseUrl;
 
+    @Value("${freshbooks.auth-url}")
     private String authUrl;
 
     @Value("${freshbooks.account-id}")
     private String accountId;
 
+    public String getClientId() { return clientId; }
+    public String getClientSecret() { return clientSecret; }
+    public String getRedirectUri() { return redirectUri; }
+    public String getBaseUrl() { return baseUrl; }
+    public String getAuthUrl() { return authUrl; }
+    public String getAccountId() { return accountId; }
 
     @Bean
     public MethodValidationPostProcessor methodValidationPostProcessor() {
