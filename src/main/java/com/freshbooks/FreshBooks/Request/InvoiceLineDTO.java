@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
+
 public class InvoiceLineDTO {
 
     @NotBlank
@@ -21,4 +20,37 @@ public class InvoiceLineDTO {
 
     @NotNull
     private Integer quantity;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BigDecimal getUnitCost() {
+        return unitCost;
+    }
+
+    public void setUnitCost(BigDecimal unitCost) {
+        this.unitCost = unitCost;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public InvoiceLineDTO(String name, BigDecimal unitCost, Integer quantity) {
+        this.name = name;
+        this.unitCost = unitCost;
+        this.quantity = quantity;
+    }
+
+    public InvoiceLineDTO() {
+    }
 }

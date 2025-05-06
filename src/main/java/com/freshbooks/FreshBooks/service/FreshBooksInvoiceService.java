@@ -2,7 +2,9 @@ package com.freshbooks.FreshBooks.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.freshbooks.FreshBooks.Request.CreateInvoiceRequest;
+import com.freshbooks.FreshBooks.Request.CustomOrderRequest;
 import com.freshbooks.FreshBooks.Request.InvoiceLineDTO;
+import com.freshbooks.FreshBooks.Request.OrderItem;
 import com.freshbooks.FreshBooks.config.FreshBooksConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -12,35 +14,39 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class FreshBooksInvoiceService {
 
     private final RestTemplate restTemplate;
     private final FreshBooksConfig config;
     private final ObjectMapper objectMapper;
 
-    public String createInvoice(CreateInvoiceRequest request) throws Exception {
-        String accessToken = getAccessToken();
+    public FreshBooksInvoiceService(RestTemplate restTemplate, FreshBooksConfig config, ObjectMapper objectMapper) {
+        this.restTemplate = restTemplate;
+        this.config = config;
+        this.objectMapper = objectMapper;
+    }
 
+    public String createInvoiceFromCustomRequest(CustomOrderRequest request) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
+        headers.setBearerAuth(getAccessToken());
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Map<String, Object> invoicePayload = new HashMap<>();
-        invoicePayload.put("customerid", request.getCustomerId());
-        invoicePayload.put("create_date", request.getCreateDate());
+        Map<String, Object> invoice = new HashMap<>();
+        invoice.put("customerid", "123456"); // Or fetch dynamically
+        invoice.put("create_date", request.getOrderDateTime().substring(0, 10)); // ISO date
 
         List<Map<String, Object>> lines = new ArrayList<>();
-        for (InvoiceLineDTO line : request.getLines()) {
-            Map<String, Object> lineItem = new HashMap<>();
-            lineItem.put("name", line.getName());
-            lineItem.put("unit_cost", Map.of("amount", line.getUnitCost(), "code", "USD"));
-            lineItem.put("quantity", line.getQuantity());
-            lines.add(lineItem);
+        for (OrderItem item : request.getOrder_items()) {
+            Map<String, Object> line = new HashMap<>();
+            line.put("name", item.getTitle());
+            line.put("unit_cost", Map.of("amount", item.getPrice(), "code", "USD"));
+            line.put("quantity", item.getQuantity());
+            lines.add(line);
         }
-        invoicePayload.put("lines", lines);
 
-        Map<String, Object> body = Map.of("invoice", invoicePayload);
+        invoice.put("lines", lines);
+
+        Map<String, Object> body = Map.of("invoice", invoice);
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
